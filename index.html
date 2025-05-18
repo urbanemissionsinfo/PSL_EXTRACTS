@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ERA5 2m Temperature Animation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    select {
+      width: 300px;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    img {
+      margin-top: 20px;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Select a City to View ERA5 2m Temperature Animation</h2>
+
+    <select id="cityDropdown" onchange="showGif()">
+      <option value="delhi">Delhi</option>
+    </select>
+
+    <br><br>
+
+    <img id="animation" src="" alt="Animation will appear here" style="display:none;">
+    
+    <br>
+
+    <a id="downloadBtn" href="#" download style="display:none;">
+      <button>Download GIF</button>
+    </a>
+  </div>
+
+  <script>
+    const dropdown = document.getElementById('cityDropdown');
+    const animation = document.getElementById('animation');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // Load city names from CSV
+    fetch('assets/city_state_file_names.csv')
+  .then(response => response.text())
+  .then(data => {
+    const lines = data.trim().split('\n').slice(1); // skip header
+    lines.forEach(line => {
+      const rawCity = line.split(',')[0].trim();
+      const city = rawCity
+        .toLowerCase()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
+      const option = document.createElement('option');
+      option.value = rawCity; // use original name for filenames
+      option.textContent = city; // display capitalized
+      if (rawCity.toLowerCase() === 'delhi') {
+        option.selected = true;
+      }
+      dropdown.appendChild(option);
+    });
+
+    // Automatically show GIF for Delhi on load
+    showGif();
+  });
+
+
+    function showGif() {
+      const city_selected = dropdown.value;
+      if (city_selected) {
+        const newSrc = `plots/era5_animations/ERA5_temp2m_${city_selected}_anime.gif`;
+        animation.src = newSrc;
+        animation.style.display = 'block';
+
+        // Show and update download button
+        downloadBtn.href = newSrc;
+        downloadBtn.style.display = 'inline-block';
+      } else {
+        animation.style.display = 'none';
+        downloadBtn.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
