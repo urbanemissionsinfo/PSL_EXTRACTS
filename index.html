@@ -5,7 +5,7 @@
   <title>ERA5 2m Temperature Animation</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
       padding: 20px;
     }
 
@@ -39,11 +39,15 @@
 <body>
 
   <div class="container">
-    <h2>Select a City to View ERA5 2m Temperature Animation</h2>
-
-    <select id="cityDropdown" onchange="showGif()">
-      <option value="delhi">Delhi</option>
-    </select>
+    <h1> Air Temperature</h1>
+    <p> Air temperature at 2 m above the land surface is a key variable used to assess climate change. </p>
+    <div style="width: 100%; display: flex; flex-direction: row; align-items:middle; justify-content: space-between;">
+        <h3>Select a City to View ERA5 2m Temperature Animation</h2>
+        <select id="cityDropdown" onchange="showGif()">
+          <option value="delhi">Delhi</option>
+        </select>
+    </div>
+    
 
     <br><br>
 
