@@ -71,43 +71,67 @@
   .then(response => response.text())
   .then(data => {
     const lines = data.trim().split('\n').slice(1); // skip header
+    const cityOptions = [];
+
     lines.forEach(line => {
       const rawCity = line.split(',')[0].trim();
-      const city = rawCity
+      const displayCity = rawCity
         .toLowerCase()
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
+      cityOptions.push({ value: rawCity, label: displayCity });
+    });
+
+    // Sort alphabetically by label
+    cityOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+    // Populate the dropdown
+    cityOptions.forEach(city => {
       const option = document.createElement('option');
-      option.value = rawCity; // use original name for filenames
-      option.textContent = city; // display capitalized
-      if (rawCity.toLowerCase() === 'delhi') {
+      option.value = city.value;
+      option.textContent = city.label;
+      if (city.value.toLowerCase() === 'delhi') {
         option.selected = true;
       }
       dropdown.appendChild(option);
     });
 
-    // Automatically show GIF for Delhi on load
+    // Show Delhi GIF on load
     showGif();
   });
 
 
-    function showGif() {
-      const city_selected = dropdown.value;
-      if (city_selected) {
-        const newSrc = `plots/era5_animations/ERA5_temp2m_${city_selected}_anime.gif`;
-        animation.src = newSrc;
-        animation.style.display = 'block';
 
-        // Show and update download button
-        downloadBtn.href = newSrc;
-        downloadBtn.style.display = 'inline-block';
-      } else {
-        animation.style.display = 'none';
-        downloadBtn.style.display = 'none';
-      }
-    }
+    function showGif() {
+  const city_selected = dropdown.value;
+
+  if (city_selected) {
+    const newSrc = `plots/era5_animations/ERA5_temp2m_${city_selected}_anime.gif`;
+
+    // Hide current image and clear src
+    animation.style.display = 'none';
+    animation.src = '';
+
+    // Preload the new image
+    const imgLoader = new Image();
+    imgLoader.onload = function () {
+      animation.src = newSrc;
+      animation.style.display = 'block';
+    };
+    imgLoader.src = newSrc;
+
+    // Update and show download button
+    downloadBtn.href = newSrc;
+    downloadBtn.style.display = 'inline-block';
+  } else {
+    animation.style.display = 'none';
+    animation.src = '';
+    downloadBtn.style.display = 'none';
+  }
+}
+
   </script>
 
 </body>
